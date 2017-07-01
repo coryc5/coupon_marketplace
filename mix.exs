@@ -11,6 +11,6 @@ defmodule CouponMarketplace.Umbrella.Mixfile do
   end
 
   defp deps do
-    []
+    [{:credo, "~> 0.8.1", only: [:dev, :test], runtime: false}]
   end
 end
