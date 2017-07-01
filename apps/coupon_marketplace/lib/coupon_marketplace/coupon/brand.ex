@@ -1,4 +1,4 @@
-defmodule CouponMarketplace.Brand do
+defmodule CouponMarketplace.Coupon.Brand do
   use Ecto.Schema
   use CouponMarketplace.Aliases
 

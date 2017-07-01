@@ -6,7 +6,7 @@ defmodule CouponMarketplace.Aliases do
   defmacro __using__(_) do
     quote do
       alias CouponMarketplace.{
-        Brand
+        Coupon.Brand
       }
     end
   end
