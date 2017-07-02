@@ -9,8 +9,8 @@ defmodule CouponMarketplace.User.BalanceTransaction do
     id: id,
     amount: integer,
     user_id: User.id,
-    inserted_at: Ecto.DateTime.t,
-    updated_at: Ecto.DateTime.t
+    inserted_at: NaiveDateTime.t,
+    updated_at: NaiveDateTime.t
   }
 
   schema "balance_transactions" do

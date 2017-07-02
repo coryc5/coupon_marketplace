@@ -11,8 +11,8 @@ defmodule CouponMarketplace.User do
     id: id,
     name: String.t,
     email: String.t,
-    inserted_at: Ecto.DateTime.t,
-    updated_at: Ecto.DateTime.t
+    inserted_at: NaiveDateTime.t,
+    updated_at: NaiveDateTime.t
   }
 
   schema "users" do

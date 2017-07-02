@@ -12,8 +12,8 @@ defmodule CouponMarketplace.Coupon do
     value: pos_integer,
     unique_coupon_code: String.t,
     brand_id: Brand.id,
-    inserted_at: Ecto.DateTime.t,
-    updated_at: Ecto.DateTime.t
+    inserted_at: NaiveDateTime.t,
+    updated_at: NaiveDateTime.t
   }
 
   schema "coupons" do

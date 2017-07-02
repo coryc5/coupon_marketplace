@@ -9,6 +9,7 @@ defmodule CouponMarketplace.Aliases do
         Brand,
         Coupon,
         Coupon.CouponTransaction,
+        Repo,
         User,
         User.BalanceTransaction,
       }

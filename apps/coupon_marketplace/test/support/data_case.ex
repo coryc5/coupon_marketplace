@@ -16,7 +16,7 @@ defmodule CouponMarketplace.DataCase do
 
   using do
     quote do
-      alias CouponMarketplace.Repo
+      use CouponMarketplace.Aliases
 
       import Ecto
       import Ecto.Changeset

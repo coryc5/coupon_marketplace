@@ -10,8 +10,8 @@ defmodule CouponMarketplace.Coupon.CouponTransaction do
     coupon_id: Coupon.id,
     poster_id: User.id,
     requester_id: User.id,
-    inserted_at: Ecto.DateTime.t,
-    updated_at: Ecto.DateTime.t
+    inserted_at: NaiveDateTime.t,
+    updated_at: NaiveDateTime.t
   }
 
   schema "coupon_transactions" do
