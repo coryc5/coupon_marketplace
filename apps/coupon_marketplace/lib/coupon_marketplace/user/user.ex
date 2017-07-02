@@ -6,8 +6,9 @@ defmodule CouponMarketplace.User do
   User interface API. Users must have unique emails.
   """
 
+  @type id :: pos_integer
   @type t :: %User{
-    id: pos_integer,
+    id: id,
     name: String.t,
     email: String.t,
     inserted_at: Ecto.DateTime.t,

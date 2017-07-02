@@ -6,8 +6,9 @@ defmodule CouponMarketplace.Coupon do
   Coupon interface API. A coupon's value is stored as an integer in cents.
   """
 
+  @type id :: pos_integer
   @type t :: %Coupon{
-    id: pos_integer,
+    id: id,
     value: pos_integer,
     unique_coupon_code: String.t,
     brand_id: pos_integer,

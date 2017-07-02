@@ -8,6 +8,7 @@ defmodule CouponMarketplace.Aliases do
       alias CouponMarketplace.{
         Coupon,
         Coupon.Brand,
+        Coupon.CouponPosting,
         User,
       }
     end
