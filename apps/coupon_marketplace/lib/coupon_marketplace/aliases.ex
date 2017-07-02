@@ -8,7 +8,7 @@ defmodule CouponMarketplace.Aliases do
       alias CouponMarketplace.{
         Brand,
         Coupon,
-        Coupon.CouponPosting,
+        Coupon.CouponTransaction,
         User,
         User.BalanceTransaction,
       }
