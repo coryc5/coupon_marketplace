@@ -11,7 +11,7 @@ defmodule CouponMarketplace.Coupon do
     id: id,
     value: pos_integer,
     unique_coupon_code: String.t,
-    brand_id: pos_integer,
+    brand_id: Brand.id,
     inserted_at: Ecto.DateTime.t,
     updated_at: Ecto.DateTime.t
   }

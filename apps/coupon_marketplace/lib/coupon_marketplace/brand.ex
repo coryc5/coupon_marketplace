@@ -1,11 +1,12 @@
-defmodule CouponMarketplace.Coupon.Brand do
+defmodule CouponMarketplace.Brand do
   use Ecto.Schema
   use CouponMarketplace.Aliases
 
   @moduledoc false
 
+  @type id :: pos_integer
   @type t :: %Brand{
-    id: pos_integer,
+    id: id,
     name: String.t,
     inserted_at: Ecto.DateTime.t,
     updated_at: Ecto.DateTime.t
