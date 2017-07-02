@@ -1,5 +1,5 @@
 defmodule CouponMarketplace.BrandTest do
-  use CouponMarketplace.DataCase
+  use CouponMarketplace.DataCase, async: true
 
   test "create adds brand to database" do
     input_name = "test brand"
