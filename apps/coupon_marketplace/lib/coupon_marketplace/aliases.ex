@@ -10,6 +10,7 @@ defmodule CouponMarketplace.Aliases do
         Coupon,
         Coupon.CouponPosting,
         User,
+        User.BalanceTransaction,
       }
     end
   end
