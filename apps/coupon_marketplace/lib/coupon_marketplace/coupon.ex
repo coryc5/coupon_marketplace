@@ -7,6 +7,7 @@ defmodule CouponMarketplace.Coupon do
   """
 
   @type id :: pos_integer
+  @type changeset :: Ecto.Changeset.t
   @type t :: %Coupon{
     id: id | nil,
     value: pos_integer | nil,
@@ -22,15 +23,14 @@ defmodule CouponMarketplace.Coupon do
 
     belongs_to :brand, Brand
 
+    has_many :transactions, Transaction
+
     timestamps()
   end
 
-  @spec create(map, Brand.t) :: {:ok, t} | {:error, Ecto.Changeset.t}
-  def create(coupon_params, brand) do
-    brand
-    |> Ecto.build_assoc(:coupons)
-    |> changeset(coupon_params)
-    |> Repo.insert()
+  @spec new(Brand.t) :: t
+  def new(brand) do
+    Ecto.build_assoc(brand, :coupons)
   end
 
   @spec find(id) :: {:ok, t} | {:error, :not_found | :bad_request}
@@ -42,9 +42,9 @@ defmodule CouponMarketplace.Coupon do
     end
   end
 
-  @spec changeset(t, map) :: Ecto.Changeset.t
-  def changeset(coupon, coupon_params) do
-    required_params = [:value, :unique_coupon_code, :brand_id]
+  @spec changeset(t, map) :: changeset
+  def changeset(coupon, coupon_params = %{brand: brand}) do
+    required_params = [:value, :unique_coupon_code]
     value_check_constraint_opts = [
       name: :value_must_be_positive,
       message: "is not greater than 0"
@@ -53,6 +53,7 @@ defmodule CouponMarketplace.Coupon do
     coupon
     |> Ecto.Changeset.cast(coupon_params, required_params)
     |> Ecto.Changeset.validate_required(required_params)
+    |> Ecto.Changeset.put_assoc(:brand, brand, required: true)
     |> Ecto.Changeset.check_constraint(:value, value_check_constraint_opts)
     |> Ecto.Changeset.unique_constraint(:unique_coupon_code)
   end

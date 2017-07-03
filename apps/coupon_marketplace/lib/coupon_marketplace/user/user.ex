@@ -22,6 +22,8 @@ defmodule CouponMarketplace.User do
     field :initial_deposit, :boolean, default: false
 
     has_many :balance_transactions, BalanceTransaction
+    has_many :posts, Transaction, foreign_key: :poster_id
+    has_many :requests, Transaction, foreign_key: :requester_id
 
     timestamps()
   end
