@@ -12,6 +12,8 @@ defmodule CouponMarketplace.User do
     name: String.t | nil,
     email: String.t | nil,
     initial_deposit: boolean,
+    balance: non_neg_integer,
+    lock_version: pos_integer,
     inserted_at: NaiveDateTime.t | nil,
     updated_at: NaiveDateTime.t | nil
   }
@@ -20,8 +22,9 @@ defmodule CouponMarketplace.User do
     field :name, :string
     field :email, :string
     field :initial_deposit, :boolean, default: false
+    field :balance, :integer, default: 0
+    field :lock_version, :integer, default: 1
 
-    has_many :balance_transactions, BalanceTransaction
     has_many :posts, Transaction, foreign_key: :poster_id
     has_many :requests, Transaction, foreign_key: :requester_id
 
@@ -47,36 +50,23 @@ defmodule CouponMarketplace.User do
     end
   end
 
-  @spec update(t, map) :: {:ok, t} | {:error, Ecto.Changeset.t}
-  def update(user, user_params) do
-    user
-    |> changeset(user_params)
-    |> Repo.update()
-  end
-
   @spec changeset(t, map) :: Ecto.Changeset.t
   def changeset(user, user_params) do
     required_params = [:name, :email, :initial_deposit]
+    balance_check_constraint_opts = [
+      name: :balance_must_not_be_negative,
+      message: "is less than 0"
+    ]
 
     user
     |> Ecto.Changeset.cast(user_params, required_params)
     |> Ecto.Changeset.validate_required(required_params)
     |> Ecto.Changeset.unique_constraint(:email)
+    |> Ecto.Changeset.check_constraint(:balance, balance_check_constraint_opts)
   end
 
-  @spec create_balance_transaction(t, integer) ::
-    {:ok, BalanceTransaction.t} | {:error, Ecto.Changeset.t}
-  def create_balance_transaction(user, amount) do
-    user
-    |> Ecto.build_assoc(:balance_transactions)
-    |> BalanceTransaction.changeset(%{amount: amount})
-    |> Repo.insert()
-  end
-
-  @spec maybe_add_initial_deposit(t) :: {:ok, t} | {:error, Ecto.Changeset.t}
-  def maybe_add_initial_deposit(%User{initial_deposit: false} = user),
-    do: add_initial_deposit(user)
-  def maybe_add_initial_deposit(%User{initial_deposit: true} = user) do
+  @spec add_initial_deposit(t) :: {:ok, t} | {:error, Ecto.Changeset.t}
+  def add_initial_deposit(%User{initial_deposit: true} = user) do
     changeset =
       user
       |> Ecto.Changeset.change()
@@ -85,16 +75,10 @@ defmodule CouponMarketplace.User do
     {:error, changeset}
   end
 
-  @spec get_balance(t) :: non_neg_integer | nil
-  def get_balance(user) do
+  def add_initial_deposit(user) do
     user
-    |> Ecto.assoc(:balance_transactions)
-    |> Repo.aggregate(:sum, :amount)
-  end
-
-  @spec add_initial_deposit(t) :: {:ok, t} | {:error, Ecto.Changeset.t}
-  defp add_initial_deposit(user) do
-    with {:ok, _balance_transaction} <- create_balance_transaction(user, 2000),
-      do: update(user, %{initial_deposit: true})
+    |> Ecto.Changeset.change(%{initial_deposit: true, balance: 2000})
+    |> Ecto.Changeset.optimistic_lock(:lock_version)
+    |> Repo.update()
   end
 end

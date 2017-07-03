@@ -71,58 +71,27 @@ defmodule CouponMarketplace.UserTest do
     assert Map.get(user_changeset.changes, :extra_param) == nil
   end
 
-  test "update changes user in database", %{user_params: user_params} do
-    {:ok, user = %User{id: user_id}} = User.create(user_params)
-
-    updated_name = "updated test user"
-    {:ok, _updated_user} = User.update(user, %{name: updated_name})
-
-    {:ok, %User{name: result_name}} = User.find(user_id)
-
-    assert result_name == updated_name
-  end
-
-  test "update cannot duplicate an email", %{user_params: user_params} do
-    {:ok, user = %User{id: user_id}} = User.create(user_params)
-
-    updated_name = "updated test user"
-    {:ok, _updated_user} = User.update(user, %{name: updated_name})
-
-    {:ok, %User{name: result_name}} = User.find(user_id)
-
-    assert result_name == updated_name
-  end
-
-  test "create_balance_transaction", %{user_params: user_params} do
-    {:ok, user} = User.create(user_params)
-    assert User.get_balance(user) == nil
-
-    credit = 1000
-    {:ok, _credit_result} = User.create_balance_transaction(user, credit)
-
-    assert User.get_balance(user) == credit
-
-    debit = -500
-    {:ok, _debit_result} = User.create_balance_transaction(user, debit)
-
-    assert User.get_balance(user) == credit + debit
-  end
-
   test "adding initial deposit updates user", %{user_params: user_params} do
     {:ok, %User{initial_deposit: false} = user} = User.create(user_params)
-    {:ok, updated_user} = User.maybe_add_initial_deposit(user)
+    {:ok, _updated_user} = User.add_initial_deposit(user)
+    {:ok, result_user} = User.find(user.id)
 
-    assert updated_user.initial_deposit == true
-    assert User.get_balance(user) == 2000
+    assert result_user.initial_deposit == true
+    assert result_user.balance == 2000
   end
 
   test "cannot add initial deposit more than once", %{user_params: user_params} do
     {:ok, %User{initial_deposit: false} = user} = User.create(user_params)
-    {:ok, updated_user} = User.maybe_add_initial_deposit(user)
-    {:error, user_changeset} = User.maybe_add_initial_deposit(updated_user)
+    {:ok, updated_user} = User.add_initial_deposit(user)
+
+    # updating a stale user should through an error
+    assert_raise(Ecto.StaleEntryError, fn -> User.add_initial_deposit(user) end)
+
+    {:error, user_changeset} = User.add_initial_deposit(updated_user)
+    {:ok, result_user} = User.find(user.id)
 
     assert "already exists" in errors_on(user_changeset, :initial_deposit)
-    assert updated_user.initial_deposit == true
-    assert User.get_balance(user) == 2000
+    assert result_user.initial_deposit == true
+    assert result_user.balance == 2000
   end
 end

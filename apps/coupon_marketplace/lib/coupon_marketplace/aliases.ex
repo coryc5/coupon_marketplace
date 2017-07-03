@@ -11,7 +11,6 @@ defmodule CouponMarketplace.Aliases do
         Transaction,
         Repo,
         User,
-        User.BalanceTransaction,
       }
     end
   end
