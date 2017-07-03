@@ -17,6 +17,8 @@ defmodule CouponMarketplace.Brand do
   schema "brands" do
     field :name, :string
 
+    has_many :coupons, Coupon
+
     timestamps()
   end
 

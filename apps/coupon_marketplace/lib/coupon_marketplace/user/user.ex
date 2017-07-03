@@ -64,9 +64,10 @@ defmodule CouponMarketplace.User do
 
   @spec create_balance_transaction(t, integer) ::
     {:ok, BalanceTransaction.t} | {:error, Ecto.Changeset.t}
-  def create_balance_transaction(%User{id: user_id}, amount) do
-    %BalanceTransaction{}
-    |> BalanceTransaction.changeset(%{user_id: user_id, amount: amount})
+  def create_balance_transaction(user, amount) do
+    user
+    |> Ecto.build_assoc(:balance_transactions)
+    |> BalanceTransaction.changeset(%{amount: amount})
     |> Repo.insert()
   end
 

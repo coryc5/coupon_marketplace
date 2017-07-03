@@ -12,6 +12,7 @@ defmodule CouponMarketplace.Repo.Migrations.CreateCouponsTable do
       timestamps()
     end
 
+    create unique_index(:coupons, [:unique_coupon_code])
     create constraint(:coupons, :value_must_be_positive, check: "value > 0")
   end
 end
