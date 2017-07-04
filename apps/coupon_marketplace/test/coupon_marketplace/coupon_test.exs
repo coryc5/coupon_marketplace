@@ -2,7 +2,7 @@ defmodule CouponMarketplace.CouponTest do
   use CouponMarketplace.DataCase, async: true
 
   setup do
-    {:ok, brand} = Brand.create(%{name: "test brand"})
+    {:ok, brand} = Brand.create(%{name: "test brand #{:rand.uniform}"})
     {:ok, user} = User.create(%{
       name: "test user",
       email: "test@email.com"

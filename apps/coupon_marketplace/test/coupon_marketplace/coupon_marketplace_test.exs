@@ -24,7 +24,7 @@ defmodule CouponMarketplaceTest do
     {:ok, c} = User.create(%{name: "test user c", email: "test_c@email.com"})
     {:ok, c} = User.add_initial_deposit(c)
 
-    {:ok, brand} = Brand.create(%{name: "test brand"})
+    {:ok, brand} = Brand.create(%{name: "test brand #{:rand.uniform}"})
     {:ok, coupon_a} = Coupon.create(%{
       value: 500,
       unique_coupon_code: Ecto.UUID.generate(),
@@ -58,7 +58,7 @@ defmodule CouponMarketplaceTest do
     {:ok, c} = User.create(%{name: "test user c", email: "test_c@email.com"})
     {:ok, c} = User.add_initial_deposit(c)
 
-    {:ok, brand} = Brand.create(%{name: "test brand"})
+    {:ok, brand} = Brand.create(%{name: "test brand #{:rand.uniform}"})
     {:ok, coupon_a} = Coupon.create(%{
       value: 500,
       unique_coupon_code: Ecto.UUID.generate(),

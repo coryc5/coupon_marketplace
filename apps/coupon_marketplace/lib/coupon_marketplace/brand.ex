@@ -29,6 +29,7 @@ defmodule CouponMarketplace.Brand do
     %Brand{}
     |> Ecto.Changeset.cast(brand_params, required_params)
     |> Ecto.Changeset.validate_required(required_params)
+    |> Ecto.Changeset.unique_constraint(:name)
     |> Repo.insert()
   end
 end
