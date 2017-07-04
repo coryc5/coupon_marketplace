@@ -14,7 +14,7 @@ defmodule CouponMarketplace.Coupon do
     unique_coupon_code: String.t | nil,
     lock_version: pos_integer,
     brand_id: Brand.id | nil,
-    owner_id: User.id,
+    owner_id: User.id | nil,
     open_transaction_id: Transaction.id | nil,
     inserted_at: NaiveDateTime.t | nil,
     updated_at: NaiveDateTime.t | nil
