@@ -32,7 +32,8 @@ defmodule CouponMarketplace.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.1-rc"}
+      # for dialyzer, see https://github.com/elixir-ecto/ecto/issues/1882
+      {:ecto, github: "elixir-ecto/ecto", tag: "master"}
     ]
   end
 

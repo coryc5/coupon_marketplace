@@ -52,7 +52,7 @@ defmodule CouponMarketplace.Transaction do
     end
   end
 
-  @spec maybe_request(Coupon.t, User.t) :: {:ok, t} | {:error, changeset | atom}
+  @spec maybe_request(Coupon.t, User.t) :: {:ok, map} | {:error, changeset | atom}
   def maybe_request(%Coupon{value: value}, %User{balance: balance}) when value > balance,
     do: {:error, :balance_too_low}
   def maybe_request(coupon, requester = %User{id: requester_id}) do
