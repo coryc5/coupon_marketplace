@@ -94,4 +94,34 @@ defmodule CouponMarketplace.UserTest do
     assert result_user.initial_deposit == true
     assert result_user.balance == 2000
   end
+
+  test "user can deposit", %{user_params: user_params} do
+    {:ok, %User{initial_deposit: false} = user} = User.create(user_params)
+    {:ok, updated_user} = User.add_initial_deposit(user)
+    User.deposit(updated_user, 5000)
+    {:ok, result_user} = User.find(user.id)
+
+    assert result_user.balance == 7000
+  end
+
+  test "user cannot deposit until initial deposit made", %{user_params: user_params} do
+    {:ok, %User{initial_deposit: false} = user} = User.create(user_params)
+    assert User.deposit(user, 5000) == {:error, :user_has_not_made_initial_deposit}
+
+    {:ok, result_user} = User.find(user.id)
+    assert result_user.balance == 0
+  end
+
+  test "user can only deposit positive integers", %{user_params: user_params} do
+    {:ok, %User{initial_deposit: false} = user} = User.create(user_params)
+    {:ok, updated_user} = User.add_initial_deposit(user)
+
+    assert {:error, :invalid_deposit} == User.deposit(updated_user, -5000)
+    assert {:error, :invalid_deposit} == User.deposit(updated_user, 0)
+    assert {:error, :invalid_deposit} == User.deposit(updated_user, 100.0)
+
+    {:ok, result_user} = User.find(user.id)
+
+    assert result_user.balance == 2000
+  end
 end

@@ -27,6 +27,7 @@ defmodule CouponMarketplace.User do
     field :balance, :integer, default: 0
     field :lock_version, :integer, default: 1
 
+    has_many :coupons, Coupon, foreign_key: :owner_id
     has_many :posts, Transaction, foreign_key: :poster_id
     has_many :requests, Transaction, foreign_key: :requester_id
 
@@ -83,6 +84,14 @@ defmodule CouponMarketplace.User do
     |> Ecto.Changeset.optimistic_lock(:lock_version)
     |> Repo.update()
   end
+
+  @spec deposit(t, pos_integer) :: {1, nil}
+  def deposit(%User{initial_deposit: false}, _amount),
+    do: {:error, :user_has_not_made_initial_deposit}
+  def deposit(user, amount) when is_integer(amount) and amount > 0,
+    do: Repo.update_all(query_one(user), inc: [balance: amount])
+  def deposit(_user, _amount),
+    do: {:error, :invalid_deposit}
 
   @spec query_one(t) :: Ecto.Queryable.t
   def query_one(%User{id: user_id}) do

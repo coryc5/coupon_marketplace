@@ -7,7 +7,9 @@ defmodule CouponMarketplace.Repo.Migrations.CreateCouponsTable do
     create table(:coupons) do
       add :value, :integer
       add :unique_coupon_code, :string
+      add :lock_version, :integer
       add :brand_id, references(:brands)
+      add :owner_id, references(:users)
 
       timestamps()
     end

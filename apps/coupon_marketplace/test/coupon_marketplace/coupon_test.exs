@@ -3,14 +3,18 @@ defmodule CouponMarketplace.CouponTest do
 
   setup do
     {:ok, brand} = Brand.create(%{name: "test brand"})
+    {:ok, user} = User.create(%{
+      name: "test user",
+      email: "test@email.com"
+    })
+    {:ok, user} = User.add_initial_deposit(user)
 
     coupon_params = %{
       value: 500,
-      unique_coupon_code: Ecto.UUID.generate(),
-      brand: brand
+      unique_coupon_code: Ecto.UUID.generate()
     }
 
-    {:ok, coupon_params: coupon_params}
+    {:ok, coupon_params: coupon_params, brand: brand, user: user}
   end
 
   test "changeset with required params is valid", %{coupon_params: coupon_params} do
@@ -19,25 +23,28 @@ defmodule CouponMarketplace.CouponTest do
     assert changeset.valid?
   end
 
-  test "changeset without required params is invalid" do
-    changeset = Coupon.changeset(%Coupon{}, %{brand: %Brand{}})
+  test "cannot create coupon without initial deposit" do
+     result = Coupon.create(%{}, %User{initial_deposit: false}, %Brand{})
+     assert result == {:error, :user_has_not_made_initial_deposit}
+  end
+
+  test "create without required params results in invalid changeset" do
+    {:error, changeset} = Coupon.create(%{}, %User{initial_deposit: true}, %Brand{})
 
     refute changeset.valid?
     assert "can't be blank" in errors_on(changeset, :value)
     assert "can't be blank" in errors_on(changeset, :unique_coupon_code)
   end
 
-  test "create adds coupon to database", %{coupon_params: coupon_params} do
-    {:ok, %Coupon{id: coupon_id}} =
-      %Coupon{}
-      |> Coupon.changeset(coupon_params)
-      |> Repo.insert()
+  test "create adds coupon to database", %{coupon_params: coupon_params, brand: brand, user: user} do
+    {:ok, %Coupon{id: coupon_id}} = Coupon.create(coupon_params, user, brand)
 
     {:ok, result_coupon} = Coupon.find(coupon_id)
 
     assert result_coupon.value == coupon_params.value
     assert result_coupon.unique_coupon_code == coupon_params.unique_coupon_code
-    assert result_coupon.brand_id == coupon_params.brand.id
+    assert result_coupon.brand_id == brand.id
+    assert result_coupon.owner_id == user.id
   end
 
   test "create returns error when trying to duplicate unique_coupon_code", %{coupon_params: coupon_params} do
