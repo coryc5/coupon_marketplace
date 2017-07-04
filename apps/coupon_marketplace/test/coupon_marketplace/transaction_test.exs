@@ -22,6 +22,8 @@ defmodule CouponMarketplace.TransactionTest do
 
     User.add_initial_deposit(user_a)
     User.add_initial_deposit(user_b)
+    {:ok, user_a} = User.find(user_a.id)
+    {:ok, user_b} = User.find(user_b.id)
 
     {:ok, transaction_params: %{coupon: coupon_params}, user_a: user_a, user_b: user_b}
   end
@@ -91,6 +93,13 @@ defmodule CouponMarketplace.TransactionTest do
     {:ok, _second_transaction} = Transaction.maybe_request(coupon, user_b)
 
     assert {:error, :invalid_request} == Transaction.maybe_request(coupon, user_b)
+  end
+
+  test "requester can only request when their balance is atleast equal to coupon value", %{transaction_params: transaction_params, user_a: user_a, user_b: user_b} do
+    {:ok, first_transaction} = Transaction.create_from_new_coupon(transaction_params, user_a)
+    {:ok, coupon} = Coupon.find(first_transaction.coupon_id)
+
+    assert {:error, :balance_too_low} == Transaction.maybe_request(coupon, %User{user_b | balance: 0})
   end
 
   test "maybe_post creates new transaction when valid", %{transaction_params: transaction_params, user_a: user_a, user_b: user_b} do
