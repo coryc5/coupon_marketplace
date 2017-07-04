@@ -2,6 +2,8 @@ defmodule CouponMarketplace.User do
   use Ecto.Schema
   use CouponMarketplace.Aliases
 
+  require Ecto.Query
+
   @moduledoc """
   User interface API. Users must have unique emails.
   """
@@ -80,5 +82,10 @@ defmodule CouponMarketplace.User do
     |> Ecto.Changeset.change(%{initial_deposit: true, balance: 2000})
     |> Ecto.Changeset.optimistic_lock(:lock_version)
     |> Repo.update()
+  end
+
+  @spec query_one(t) :: Ecto.Queryable.t
+  def query_one(%User{id: user_id}) do
+    Ecto.Query.from(u in User, where: u.id == ^user_id)
   end
 end
