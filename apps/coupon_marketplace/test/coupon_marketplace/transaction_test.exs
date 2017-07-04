@@ -116,9 +116,14 @@ defmodule CouponMarketplace.TransactionTest do
     {:ok, coupon} = Coupon.find(coupon.id)
     {:ok, _second_transaction} = Transaction.maybe_request(coupon, user_b)
     {:ok, coupon} = Coupon.find(coupon.id)
+    assert coupon.owner_id == user_b.id
+
     {:ok, _third_transaction} = Transaction.maybe_post(coupon, user_b)
     {:ok, coupon} = Coupon.find(coupon.id)
     {:ok, fourth_transaction} = Transaction.maybe_request(coupon, user_a)
+    {:ok, coupon} = Coupon.find(coupon.id)
+    assert coupon.owner_id == user_a.id
+
     {:ok, result_transaction} = Transaction.find(fourth_transaction.request.id)
 
     assert result_transaction.poster_id == user_b.id

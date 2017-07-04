@@ -76,6 +76,6 @@ defmodule CouponMarketplace.Coupon do
   def close_transaction(coupon, new_owner) do
     coupon
     |> changeset(%{})
-    |> Ecto.Changeset.change(%{owner_id: nil, open_transaction_id: nil})
+    |> Ecto.Changeset.change(%{owner_id: new_owner.id, open_transaction_id: nil})
   end
 end
