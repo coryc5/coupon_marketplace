@@ -1,6 +1,10 @@
 defmodule CouponMarketplace do
   use CouponMarketplace.Aliases
 
+  @moduledoc """
+  Basic marketplace interface
+  """
+
   @spec users :: [User.t]
   def users, do: Repo.all(User)
 

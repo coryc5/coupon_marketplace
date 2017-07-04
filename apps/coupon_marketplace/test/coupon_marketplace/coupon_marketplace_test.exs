@@ -4,9 +4,9 @@ defmodule CouponMarketplaceTest do
   test "users" do
     assert CouponMarketplace.users() == []
 
-    {:ok, a} = User.create(%{name: "test user a",email: "test_a@email.com"})
-    {:ok, b} = User.create(%{name: "test user b",email: "test_b@email.com"})
-    {:ok, c} = User.create(%{name: "test user c",email: "test_c@email.com"})
+    {:ok, a} = User.create(%{name: "test user a", email: "test_a@email.com"})
+    {:ok, b} = User.create(%{name: "test user b", email: "test_b@email.com"})
+    {:ok, c} = User.create(%{name: "test user c", email: "test_c@email.com"})
 
     assert Enum.member?(CouponMarketplace.users(), a)
     assert Enum.member?(CouponMarketplace.users(), b)
@@ -17,11 +17,11 @@ defmodule CouponMarketplaceTest do
   test "transactions" do
     assert CouponMarketplace.transactions() == []
 
-    {:ok, a} = User.create(%{name: "test user a",email: "test_a@email.com"})
+    {:ok, a} = User.create(%{name: "test user a", email: "test_a@email.com"})
     {:ok, a} = User.add_initial_deposit(a)
-    {:ok, b} = User.create(%{name: "test user b",email: "test_b@email.com"})
+    {:ok, b} = User.create(%{name: "test user b", email: "test_b@email.com"})
     {:ok, b} = User.add_initial_deposit(b)
-    {:ok, c} = User.create(%{name: "test user c",email: "test_c@email.com"})
+    {:ok, c} = User.create(%{name: "test user c", email: "test_c@email.com"})
     {:ok, c} = User.add_initial_deposit(c)
 
     {:ok, brand} = Brand.create(%{name: "test brand"})
@@ -51,11 +51,11 @@ defmodule CouponMarketplaceTest do
   end
 
   test "revenue" do
-    {:ok, a} = User.create(%{name: "test user a",email: "test_a@email.com"})
+    {:ok, a} = User.create(%{name: "test user a", email: "test_a@email.com"})
     {:ok, a} = User.add_initial_deposit(a)
-    {:ok, b} = User.create(%{name: "test user b",email: "test_b@email.com"})
+    {:ok, b} = User.create(%{name: "test user b", email: "test_b@email.com"})
     {:ok, b} = User.add_initial_deposit(b)
-    {:ok, c} = User.create(%{name: "test user c",email: "test_c@email.com"})
+    {:ok, c} = User.create(%{name: "test user c", email: "test_c@email.com"})
     {:ok, c} = User.add_initial_deposit(c)
 
     {:ok, brand} = Brand.create(%{name: "test brand"})
