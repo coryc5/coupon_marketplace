@@ -1,3 +1,0 @@
-# CouponMarketplace
-
-**TODO: Add description**
